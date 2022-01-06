@@ -22,13 +22,13 @@ steps:
       foreach($file in Get-ChildItem "*.lyrics")
       {
         $meta = (Get-Content $file)[0] -split " \| "
-        "##vso[task.setvariable variable=world;]$meta[0]"
-        "##vso[task.setvariable variable=story]$meta[1]"
+        echo "##vso[task.setvariable variable=world;]$meta[0]"
+        echo "##vso[task.setvariable variable=story]$meta[1]"
         echo $(world)
         echo $(story)
 
         $storyContent = Get-Content $file -Encoding utf8  | Select-Object -Skip 2
-        "##vso[task.setvariable variable=content;]$storyContent" 
+        echo "##vso[task.setvariable variable=content;]$storyContent" 
         echo $(content)
       }
 - task: Bash@3
