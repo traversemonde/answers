@@ -18,11 +18,18 @@ steps:
       foreach($file in Get-ChildItem "*.lyrics")
       {
         $meta = (Get-Content $file)[0] -split " \| "
-        $env:WORLD = $meta[0]
-        $env:STORY = $meta[1]
-        $echo $env:WORLD
-        $echo $env:STORY
+        ${env:WORLD} = $meta[0]
+        ${env:STORY} = $meta[1]
+        echo ${env:WORLD}
+        echo ${env:STORY}
 
-        $env:CONTENT = Get-Content $file -Encoding utf8  | Select-Object -Skip 2 
-        echo $env:CONTENT
+        ${env:CONTENT} = Get-Content $file -Encoding utf8  | Select-Object -Skip 2 
+        echo ${env:CONTENT}
       }
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your commands here
+      
+      $(WORLD)
