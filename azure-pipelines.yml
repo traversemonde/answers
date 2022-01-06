@@ -8,9 +8,9 @@ trigger:
 - main
 
 variables:
-    world:
-    story:
-    content: 
+    world: empty
+    story: empty
+    content: empty
 pool:
   vmImage: ubuntu-latest
 
