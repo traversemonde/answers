@@ -17,10 +17,12 @@ steps:
     script: |
       foreach($file in Get-ChildItem "*.lyrics")
       {
-          $meta = (Get-Content $file)[0] -split " \| "
-          echo $meta[0]
-          echo $meta[1]
-      
-          $content = Get-Content $file -Encoding utf8  | Select-Object -Skip 2 
-          echo $content
+        $meta = (Get-Content $file)[0] -split " \| "
+        ${env:WORLD} = $meta[0]
+        ${env:STORY} = $meta[1]
+        $echo ${env:WORLD}
+        $echo ${env:STORY}
+
+        ${env:CONTENT} = Get-Content $file -Encoding utf8  | Select-Object -Skip 2 
+        echo ${env:CONTENT}
       }
