@@ -7,6 +7,10 @@
 trigger:
 - main
 
+variables:
+    world:
+    story:
+    content: 
 pool:
   vmImage: ubuntu-latest
 
@@ -18,13 +22,14 @@ steps:
       foreach($file in Get-ChildItem "*.lyrics")
       {
         $meta = (Get-Content $file)[0] -split " \| "
-        ${env:WORLD} = $meta[0]
-        ${env:STORY} = $meta[1]
-        echo ${env:WORLD}
-        echo ${env:STORY}
+        "##vso[task.setvariable variable=world;]$meta[0]"
+        "##vso[task.setvariable variable=story]$meta[1]"
+        echo $(world)
+        echo $(story)
 
-        ${env:CONTENT} = Get-Content $file -Encoding utf8  | Select-Object -Skip 2 
-        echo ${env:CONTENT}
+        $storyContent = Get-Content $file -Encoding utf8  | Select-Object -Skip 2
+        "##vso[task.setvariable variable=content;]$storyContent" 
+        echo $(content)
       }
 - task: Bash@3
   inputs:
@@ -32,4 +37,4 @@ steps:
     script: |
       # Write your commands here
       
-      $(WORLD)
+      echo $(WORLD)
