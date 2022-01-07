@@ -39,3 +39,4 @@ steps:
       echo $(WORLD)
       echo $(STORY)
       echo $(CONTENT)
+- script: echo $(content)
