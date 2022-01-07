@@ -27,5 +27,5 @@ steps:
         $storyContent = Get-Content $file -Encoding utf8  | Select-Object -Skip 2
         echo $storyContent
         Write-Host "##vso[task.setvariable variable=content;]$storyContent" 
-        Invoke-WebRequest -Uri "https://api.webflow.com/sites" -Authentication "Bearer" -Token $(webflow)
+        Invoke-WebRequest -Uri "https://api.webflow.com/sites" -Headers "{'Authorization' = 'Bearer $(webflow)'}"
       }
