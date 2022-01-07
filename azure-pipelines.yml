@@ -7,10 +7,6 @@
 trigger:
 - main
 
-variables:
-    world: empty
-    story: empty
-    content: empty
 pool:
   vmImage: ubuntu-latest
 
@@ -21,7 +17,7 @@ steps:
     script: |
       foreach($file in Get-ChildItem "*.lyrics")
       {
-        echo $(webflow)        
+        echo $(webflow)
         $meta = (Get-Content $file)[0] -split " \| "
         $meta1 = $meta[0]
         $meta2 = $meta[1]
@@ -31,4 +27,5 @@ steps:
         $storyContent = Get-Content $file -Encoding utf8  | Select-Object -Skip 2
         echo $storyContent
         Write-Host "##vso[task.setvariable variable=content;]$storyContent" 
+        Invoke-WebRequest -Uri "https://api.webflow.com/sites" -Authentication "Bearer" -Token $(webflow)
       }
