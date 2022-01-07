@@ -42,4 +42,4 @@ steps:
       echo $(CONTENT)
 - script: echo $(content)
 - pwsh: |
-    Write-Host $env:content
+    echo $(content)
