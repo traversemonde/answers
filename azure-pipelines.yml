@@ -43,3 +43,4 @@ steps:
 - script: echo $(content)
 - pwsh: |
     echo $(content)
+    echo $(world)
