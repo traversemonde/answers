@@ -21,6 +21,7 @@ steps:
     script: |
       foreach($file in Get-ChildItem "*.lyrics")
       {
+        echo $(webflow)        
         $meta = (Get-Content $file)[0] -split " \| "
         $meta1 = $meta[0]
         $meta2 = $meta[1]
@@ -31,20 +32,3 @@ steps:
         echo $storyContent
         Write-Host "##vso[task.setvariable variable=content;]$storyContent" 
       }
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |
-      # Write your commands here
-      
-      echo $(WORLD)
-      echo $(STORY)
-      echo $(CONTENT)
-- script: echo $(content)
-
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      echo $(content)
-      echo $(world)
