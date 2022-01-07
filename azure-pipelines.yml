@@ -28,6 +28,7 @@ steps:
         Write-Host "##vso[task.setvariable variable=story;]$meta2"
 
         $storyContent = @(Get-Content $file -Encoding utf8  | Select-Object -Skip 2)
+        echo $storyContent
         Write-Host "##vso[task.setvariable variable=content;]$storyContent" 
       }
 - task: Bash@3
