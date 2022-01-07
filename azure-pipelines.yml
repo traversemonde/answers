@@ -41,3 +41,5 @@ steps:
       echo $(STORY)
       echo $(CONTENT)
 - script: echo $(content)
+- pwsh: |
+    Write-Host $env:content
