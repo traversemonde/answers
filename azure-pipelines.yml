@@ -41,6 +41,10 @@ steps:
       echo $(STORY)
       echo $(CONTENT)
 - script: echo $(content)
-- pwsh: |
-    echo $(content)
-    echo $(world)
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo $(content)
+      echo $(world)
