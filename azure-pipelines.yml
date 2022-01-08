@@ -17,15 +17,33 @@ steps:
     script: |
       foreach($file in Get-ChildItem "*.lyrics")
       {
-        echo $(webflow)
         $meta = (Get-Content $file)[0] -split " \| "
-        $meta1 = $meta[0]
-        $meta2 = $meta[1]
-        Write-Host "##vso[task.setvariable variable=world;]$meta1"
-        Write-Host "##vso[task.setvariable variable=story;]$meta2"
+        $world = $meta[0]
+        $story = $meta[1]
 
-        $storyContent = Get-Content $file -Encoding utf8  | Select-Object -Skip 2
-        echo $storyContent
-        Write-Host "##vso[task.setvariable variable=content;]$storyContent" 
-        Invoke-WebRequest -Uri "https://api.webflow.com/sites" -Headers @{'Authorization' = 'Bearer $(webflow)'; 'accept-version' = '1.0.0'}
+        $content = Get-Content $file -Encoding utf8  | Select-Object -Skip 2
+        $collections = Invoke-RestMethod -Uri "https://api.webflow.com/sites/$(site)/collections" -Headers @{'Authorization' = 'Bearer $(webflow)'; 'accept-version' = '1.0.0'}
+        $relatedCollection = $collections | Where-Object -Property singularName -Eq $world
+
+        $collectionId = $relatedCollection._id
+        $collectionItems = Invoke-RestMethod -Uri "https://api.webflow.com/collections/$collectionId/items" -Headers @{'Authorization' = 'Bearer $(webflow)'; 'accept-version' = '1.0.0'}
+
+        $relatedItem = $collectionItems.items | Where-Object -Property name -Eq $story
+        $relatedItemId = $relatedItem._id
+        $storyContent = [String]::Join("`r`n",$content)
+
+        $body = @{
+            fields = @{
+                name = $relatedItem.name
+                slug = $relatedItem.slug
+                _archived = $relatedItem._archived
+                _draft = $relatedItem._draft
+                story = $storyContent
+            }
+        }
+
+        $jsonBody = $body | ConvertTo-Json
+
+        $updateResponse = Invoke-RestMethod -Method Put -Uri "https://api.webflow.com/collections/$collectionId/items/$relatedItemId" -Body ([System.Text.Encoding]::UTF8.GetBytes($jsonBody)) -Headers @{'Authorization' = 'Bearer $(webflow)'; 'accept-version' = '1.0.0'; 'Content-Type' = 'application/json; charset=utf-8'}
+    
       }
